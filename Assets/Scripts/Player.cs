@@ -12,7 +12,9 @@ public class Player : MonoBehaviour
     Animator myAnimator;
     bool isAlive = true;
     [SerializeField] float jumpSpeed = 5f;
-    Collider2D myCollider2D;
+    //Collider2D myCollider2D;
+    CapsuleCollider2D myBodyCollider;
+    BoxCollider2D myFeet;
     [SerializeField] float climbSpeed = 5f;
     // Para desligar a gravidade ao subir escadas.
     float gravityScaleAtStart;
@@ -22,9 +24,10 @@ public class Player : MonoBehaviour
     {
         myRigidBody = GetComponent<Rigidbody2D>();
         myAnimator = GetComponent<Animator>();
-        myCollider2D = GetComponent<Collider2D>();
+        myBodyCollider = GetComponent<CapsuleCollider2D>();
         // Salva a escala de gravidade atual.
         gravityScaleAtStart = myRigidBody.gravityScale;
+        myFeet = GetComponent<BoxCollider2D>();
     }
 
     // Update is called once per frame
@@ -62,7 +65,8 @@ public class Player : MonoBehaviour
 
     private void Jump()
     {
-        if (!myCollider2D.IsTouchingLayers(LayerMask.GetMask("Ground")))
+        //if (!myBodyCollider.IsTouchingLayers(LayerMask.GetMask("Ground")))
+        if (!myFeet.IsTouchingLayers(LayerMask.GetMask("Ground")))
         {
             return;
         }
@@ -76,7 +80,8 @@ public class Player : MonoBehaviour
 
     private void ClimbLadder()
     {
-        if (!myCollider2D.IsTouchingLayers(LayerMask.GetMask("Climbing")))
+        //if (!myBodyCollider.IsTouchingLayers(LayerMask.GetMask("Climbing")))
+        if (!myFeet.IsTouchingLayers(LayerMask.GetMask("Climbing")))
         {
             // Ajuste para parar a animação.
             myAnimator.SetBool("Climbing", false);
