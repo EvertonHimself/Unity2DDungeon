@@ -18,6 +18,8 @@ public class Player : MonoBehaviour
     [SerializeField] float climbSpeed = 5f;
     // Para desligar a gravidade ao subir escadas.
     float gravityScaleAtStart;
+    // Chute da morte. Lança o jogador em alguma direção com alguma velocidade.
+    [SerializeField] Vector2 deathKick = new Vector2(25f, 25f);
 
     // Start is called before the first frame update
     void Start()
@@ -33,11 +35,17 @@ public class Player : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (!isAlive)
+        {
+            return;
+        }
+
         // Executa "Run" 60fps.
         Run();
         FlipSprite();
         Jump();
         ClimbLadder();
+        Die();
     }
     
     // Faz o personagem correr.
@@ -96,5 +104,15 @@ public class Player : MonoBehaviour
 
         bool playerHasVerticalSpeed = Mathf.Abs(myRigidBody.velocity.y) > Mathf.Epsilon;
         myAnimator.SetBool("Climbing", playerHasVerticalSpeed);
+    }
+
+    private void Die()
+    {
+        if (myBodyCollider.IsTouchingLayers(LayerMask.GetMask("Enemy", "Hazards")))
+        {
+            isAlive = false;
+            myAnimator.SetTrigger("Dying");
+            GetComponent<Rigidbody2D>().velocity = deathKick;
+        }
     }
 }
