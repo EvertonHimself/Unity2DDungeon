@@ -113,6 +113,8 @@ public class Player : MonoBehaviour
             isAlive = false;
             myAnimator.SetTrigger("Dying");
             GetComponent<Rigidbody2D>().velocity = deathKick;
+            // Calls the TakeLife() from GameSession.
+            FindObjectOfType<GameSession>().ProcessPlayerDeath();
         }
     }
 }
